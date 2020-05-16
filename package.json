@@ -1,6 +1,6 @@
 {
   "name": "@hitokoto/koa-jsonp",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "JSONP middleware with GET/POST support for koajs. Support iconv.",
   "main": "index.js",
   "scripts": {
