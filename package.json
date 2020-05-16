@@ -38,5 +38,8 @@
     "mocha-standard": "^1.0.0",
     "request": "^2.67.0",
     "standard": "^5.4.1"
+  },
+  "dependencies": {
+    "flatstr": "^1.0.12"
   }
 }

@@ -4,4 +4,4 @@
  * Copyright (c) 2013 Kilian Ciuffolo, me@nailik.org
  */
 
-module.exports = require('./dist/jsonp')
+module.exports = require('./lib/jsonp')
