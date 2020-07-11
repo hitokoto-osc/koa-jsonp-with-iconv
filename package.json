@@ -4,7 +4,8 @@
   "description": "JSONP middleware with GET/POST support for koajs. Support iconv.",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test $(npm bin)/mocha test/*.test.js --exit"
+    "test": "NODE_ENV=test $(npm bin)/mocha test/*.test.js --exit",
+    "style": "yarn run eslint --fix lib/**.js test/**.js"
   },
   "repository": {
     "type": "git",
