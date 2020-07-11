@@ -19,7 +19,9 @@ const mount = require('koa-mount')
 const jsonp = require('../')
 const enableDestroy = require('server-destroy')
 
-describe('jsonp()', (done) => {
+const { describe, it, before } = global
+
+describe('jsonp()', () => {
   let server
   before(async function () {
     const app = new Koa()
@@ -90,20 +92,9 @@ describe('jsonp()', (done) => {
   it('should switch to JSONP mode if this.body is defined', function (done) {
     get('http://localhost:3000/buffered?my_cb_name=cb', function (err, res, body) {
       testCount++
-      var data = JSON.parse(body.match(/cb\(([^)]+)\)/m)[1])
+      const data = JSON.parse(body.match(/cb\(([^)]+)\)/m)[1])
       assert.equal(data.foo, 'bar')
       assert.equal(res.headers['content-type'], 'text/javascript; charset=utf-8')
-      done(err)
-    })
-  })
-
-  it('should switch to JSONP+iframe mode if callback is provided / POST', function (done) {
-    post('http://localhost:3000/buffered?my_cb_name=cb', function (err, res, body) {
-      testCount++
-      var data = JSON.parse(body.match(/cb\(([^)]+)\)/m)[1])
-      assert.equal(data.foo, 'bar')
-      assert.match(body, /<!doctype html>/)
-      assert.equal(res.headers['content-type'], 'text/html; charset=utf-8')
       done(err)
     })
   })
@@ -118,23 +109,12 @@ describe('jsonp()', (done) => {
     })
   })
 
-  it('should switch to JSONP+iframe mode if callback is provided / POST / Stream', function (done) {
-    post('http://localhost:3000/streaming?my_cb_name=cb', function (err, res, body) {
-      testCount++
-      let data = JSON.parse(body.match(/cb\(([^)]+)\)/m)[1])
-      assert.lengthOf(data, 5)
-      assert.match(body, /<!doctype html>/)
-      assert.equal(res.headers['content-type'], 'text/html; charset=utf-8')
-      done(err)
-    })
-  })
-
   function loopWaitToDestoryServer () {
-    if (testCount === 9) {
+    if (testCount === 7) {
       server.destory()
-      done()
+    } else {
+      setTimeout(loopWaitToDestoryServer, 200)
     }
-    setTimeout(loopWaitToDestoryServer, 200);
   }
   loopWaitToDestoryServer()
 })
