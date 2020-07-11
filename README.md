@@ -1,16 +1,16 @@
-# koa-jsonp
+# @hitokoto/koa-jsonp
 
 [![js-standard-style](https://img.shields.io/badge/Code%20Style-Standard-green.svg?style=flat-square)](https://github.com/feross/standard)
-[![Travis CI](https://img.shields.io/travis/kilianc/koa-jsonp.svg?style=flat-square)](https://travis-ci.org/kilianc/koa-jsonp)
-[![NPM version](https://img.shields.io/npm/v/koa-jsonp.svg?style=flat-square)](https://www.npmjs.com/package/koa-jsonp)
-[![NPM downloads](https://img.shields.io/npm/dm/koa-jsonp.svg?style=flat-square)](https://www.npmjs.com/package/koa-jsonp)
-[![GitHub Stars](https://img.shields.io/github/stars/kilianc/koa-jsonp.svg?style=flat-square)](https://github.com/kilianc/koa-jsonp)
-[![License](https://img.shields.io/npm/l/koa-jsonp.svg?style=flat-square)](https://www.npmjs.com/package/koa-jsonp)
+![Node.js CI](https://github.com/hitokoto-osc/koa-jsonp/workflows/Node.js%20CI/badge.svg)
+[![NPM version](https://img.shields.io/npm/v/@hitokoto/koa-jsonp.svg?style=flat-square)](https://www.npmjs.com/package/@hitokoto/koa-jsonp)
+[![NPM downloads](https://img.shields.io/npm/dm/@hitokoto/koa-jsonp.svg?style=flat-square)](https://www.npmjs.com/package/koa-jsonp)
+[![GitHub Stars](https://img.shields.io/github/stars/hitokoto-osc/koa-jsonp.svg?style=flat-square)](https://github.com/hitokoto-osc/koa-jsonp)
+[![License](https://img.shields.io/npm/l/@hitokoto/koa-jsonp.svg?style=flat-square)](https://www.npmjs.com/package/@hitokoto/koa-jsonp)
 
 A [koajs](https://github.com/koajs/koa) streaming friendly JSONP middleware that supports GET/POST JSONP requests.
 
 ## Install
-    $ npm install koa-jsonp@next
+    $ npm install @hitokoto/koa-jsonp
 
 ## Example
 
@@ -40,12 +40,12 @@ yield
     GET  http://localhot:8080/users                       -> JSON
     POST http://localhot:8080/users                       -> JSON
     GET  http://localhot:8080/users?callback=onUserList   -> JSONP
-    POST http://localhot:8080/users?callback=onUserList   -> JSONP + iFrame
+    POST http://localhot:8080/users?callback=onUserList   -> JSONP
 
     GET  http://localhot:8080/dow                         -> JSON
     POST http://localhot:8080/dow                         -> JSON
     GET  http://localhot:8080/dow?callback=dowReady       -> JSONP
-    POST http://localhot:8080/dow?callback=dowReady       -> JSONP + iFrame
+    POST http://localhot:8080/dow?callback=dowReady       -> JSONP
 
 ## API
 
@@ -130,10 +130,6 @@ koa-jsonp follows (more or less) the [Felix's Node.js Style Guide](http://nodegu
 The test suite is written on top of [mochajs/mocha](http://mochajs.org) and it took hours of hard work. Please use the tests to check if your contribution is breaking some part of the library and add new tests for each new feature.
 
     ⚡ npm test
-
-and for your test coverage
-
-    ⚡ make test-cov
 
 ## License
 
