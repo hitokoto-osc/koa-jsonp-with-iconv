@@ -14,11 +14,14 @@ const post = require('request').defaults({ json: true }).post
 const JSONStream = require('JSONStream')
 const stringify = require('json-array-stream')
 const Koa = require('koa')
+const http = require('http')
 const mount = require('koa-mount')
 const jsonp = require('../')
+const enableDestroy = require('server-destroy')
 
-describe('jsonp()', function () {
-  before(function (done) {
+describe('jsonp()', (done) => {
+  let server
+  before(async function () {
     const app = new Koa()
     app.use(jsonp({ callbackName: 'my_cb_name' }))
     app.use(mount('/buffered', async function (ctx) {
@@ -32,11 +35,17 @@ describe('jsonp()', function () {
         .pipe(JSONStream.parse('rows.*.value'))
         .pipe(stringify())
     }))
-    app.listen(3000, done)
+    server = http
+      .createServer(app.callback())
+      .listen(3000)
+    enableDestroy(server)
   })
+
+  let testCount = 0
 
   it('shouldn\'t do anything if callback is not provided / GET', function (done) {
     get('http://localhost:3000/buffered', function (err, res, body) {
+      testCount++
       assert.equal(body.foo, 'bar')
       assert.equal(res.headers['content-type'], 'application/json; charset=utf-8')
       done(err)
@@ -45,6 +54,7 @@ describe('jsonp()', function () {
 
   it('shouldn\'t do anything if callback is not provided / GET / Stream', function (done) {
     get('http://localhost:3000/streaming', function (err, res, body) {
+      testCount++
       assert.lengthOf(body, 5)
       assert.equal(res.headers['content-type'], 'application/octet-stream')
       done(err)
@@ -53,6 +63,7 @@ describe('jsonp()', function () {
 
   it('shouldn\'t do anything if callback is not provided / POST', function (done) {
     post('http://localhost:3000/buffered', function (err, res, body) {
+      testCount++
       assert.equal(body.foo, 'bar')
       assert.equal(res.headers['content-type'], 'application/json; charset=utf-8')
       done(err)
@@ -61,6 +72,7 @@ describe('jsonp()', function () {
 
   it('shouldn\'t do anything if this.body is undefined', function (done) {
     get('http://localhost:3000/404?my_cb_name=cb', function (err, res, body) {
+      testCount++
       assert.equal(body, 'Not Found')
       assert.equal(res.headers['content-type'], 'text/plain; charset=utf-8')
       done(err)
@@ -69,6 +81,7 @@ describe('jsonp()', function () {
 
   it('shouldn\'t do anything if this.body is null', function (done) {
     get('http://localhost:3000/null?my_cb_name=cb', function (err, res, body) {
+      testCount++
       assert.equal(res.statusCode, 204)
       done(err)
     })
@@ -76,6 +89,7 @@ describe('jsonp()', function () {
 
   it('should switch to JSONP mode if this.body is defined', function (done) {
     get('http://localhost:3000/buffered?my_cb_name=cb', function (err, res, body) {
+      testCount++
       var data = JSON.parse(body.match(/cb\(([^)]+)\)/m)[1])
       assert.equal(data.foo, 'bar')
       assert.equal(res.headers['content-type'], 'text/javascript; charset=utf-8')
@@ -85,6 +99,7 @@ describe('jsonp()', function () {
 
   it('should switch to JSONP+iframe mode if callback is provided / POST', function (done) {
     post('http://localhost:3000/buffered?my_cb_name=cb', function (err, res, body) {
+      testCount++
       var data = JSON.parse(body.match(/cb\(([^)]+)\)/m)[1])
       assert.equal(data.foo, 'bar')
       assert.match(body, /<!doctype html>/)
@@ -95,6 +110,7 @@ describe('jsonp()', function () {
 
   it('should switch to JSONP mode if callback is provided / GET / Stream', function (done) {
     get('http://localhost:3000/streaming?my_cb_name=cb', function (err, res, body) {
+      testCount++
       var data = JSON.parse(body.match(/cb\(([^)]+)\)/m)[1])
       assert.lengthOf(data, 5)
       assert.equal(res.headers['content-type'], 'text/javascript; charset=utf-8')
@@ -104,6 +120,7 @@ describe('jsonp()', function () {
 
   it('should switch to JSONP+iframe mode if callback is provided / POST / Stream', function (done) {
     post('http://localhost:3000/streaming?my_cb_name=cb', function (err, res, body) {
+      testCount++
       let data = JSON.parse(body.match(/cb\(([^)]+)\)/m)[1])
       assert.lengthOf(data, 5)
       assert.match(body, /<!doctype html>/)
@@ -111,4 +128,13 @@ describe('jsonp()', function () {
       done(err)
     })
   })
+
+  function loopWaitToDestoryServer () {
+    if (testCount === 9) {
+      server.destory()
+      done()
+    }
+    setTimeout(loopWaitToDestoryServer, 200);
+  }
+  loopWaitToDestoryServer()
 })

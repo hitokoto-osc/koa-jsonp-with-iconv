@@ -4,7 +4,7 @@
   "description": "JSONP middleware with GET/POST support for koajs. Support iconv.",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test $(npm bin)/mocha test/*.test.js --reporter spec"
+    "test": "NODE_ENV=test $(npm bin)/mocha test/*.test.js --exit"
   },
   "repository": {
     "type": "git",
@@ -37,6 +37,7 @@
     "mocha": "^8.0.1",
     "mocha-standard": "^1.0.0",
     "request": "^2.67.0",
+    "server-destroy": "^1.0.1",
     "standard": "^14.3.4"
   },
   "dependencies": {
