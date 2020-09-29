@@ -42,6 +42,7 @@
     "standard": "14.3.4"
   },
   "dependencies": {
-    "flatstr": "^1.0.12"
+    "flatstr": "^1.0.12",
+    "iconv-lite": "^0.6.2"
   }
 }
